@@ -31,9 +31,11 @@ window.onload=function(){
 	var card = document.getElementsByClassName('card');//获取有图片的li元素节点，返回一个数组对象
     /*给有图片的li元素节点绑定事件监听*/
 	for (var i = 0; i < card.length; i++) {  
-		(function(i){			
-		card[i].addEventListener('click',function(e){ 
+		(function(i){	
+
+		//card[i].addEventListener('click',handler,false);
          /*让卡片在每一次比较中只能点击一次*/
+         var  handler=function(){
          id.push(i);
          if(id[0]!=id[1]){
             _testcards.push(card[i]);
@@ -44,13 +46,15 @@ window.onload=function(){
          }
          /*当点击两张不同的卡片后，在_testcards数组中将图片比较，相同则改变两张图片的样式，存入match_cards数组，并取消_testcards数组中Li的时件监听，
          同时将_testcards数组清零，好做下一次的比较。*/
-         while(_testcards.length==2){
-         	if(_testcards[0].getElementsByTagName("i")[0].className ==_testcards[1].getElementsByTagName("i")[0].className){ 
+         while(_testcards.length==2)
+         {
+         	if(_testcards[0].getElementsByTagName("i")[0].className ==_testcards[1].getElementsByTagName("i")[0].className)
+                { 
                     for (var j = 0; j < _testcards.length; j++) 
                         {
                             _testcards[j].className="card match";
                             match_cards.push(_testcards[j]);
-                           // _testcards[j].removeEvenListener=('click',e,false);匿名函数无法取消监听绑定，正在想办法。
+                            _testcards[j].removeEventListener('click',handler,false);//取消监听绑定
                         } 
 
                             id.length=0;
@@ -68,7 +72,8 @@ window.onload=function(){
          	    }
          	_testcards.length=0;
             /*当匹配成功的的卡片数组长度为16时游戏完成*/
-            if(match_cards.length==16){
+            if(match_cards.length==16)
+            {
                 setTimeout(function(){
                    alert("恭喜你完成游戏！");
                    for (var i = 0; i < card.length; i++) {
@@ -79,8 +84,8 @@ window.onload=function(){
             }
          }	
 
-	    });
-
+	    }
+          card[i].addEventListener('click',handler,false);
 	  })(i)
 	   
 	}
