@@ -27,12 +27,16 @@ for (var i = 0; i<cards_style.length;i++){
     str += '<li class = \"card\"><i class=\"fa '+cards_style[i]+'\"></i></li>\n';
 }
 document.getElementsByClassName("deck")[0].innerHTML = str;
-/*游戏主要流程*/
+/******************************游戏主要流程***********************************************/
  window.onload=function(){
 	var _testcards=[];//用来存放互相匹配的卡片，长度最多为2。
-    var id=[];//用来记录卡片的索引值，同时在图片不匹配时能使用
+
+    var id=[];//用来记录卡片的索引值，同时在图片不匹配时能使用。
+
     var match_cards=[];//用来存放匹配成功的卡片，长度为16时游戏结束。
-	var card = document.getElementsByClassName('card');//获取有图片的li元素节点，返回一个数组对象
+
+	var card = document.getElementsByClassName('card');//获取有图片的li元素节点，返回一个数组对象。
+    
     /*给有图片的li元素节点绑定事件监听*/
 	for (var i = 0; i < card.length; i++) {  
 		(function(i){	
@@ -94,4 +98,9 @@ document.getElementsByClassName("deck")[0].innerHTML = str;
 	}
 	
 }
-
+/***************重新开始***********************************/
+function reset(){    
+    if(confirm("是否重新开始?")){
+      window.location.href="index.html";            
+    }
+}
