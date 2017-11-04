@@ -28,76 +28,80 @@ for (var i = 0; i<cards_style.length;i++){
 }
 document.getElementsByClassName("deck")[0].innerHTML = str;
 /******************************游戏主要流程***********************************************/
- window.onload=function(){
-	var _testcards=[];//用来存放互相匹配的卡片，长度最多为2。
+ //window.onload=function(){
+	var _testcards=[];     //用来存放互相匹配的卡片，长度最多为2。
 
-    var id=[];//用来记录卡片的索引值，同时在图片不匹配时能使用。
+    var car_id=[];      //用来记录卡片的索引值，让卡片在每一次比较中只记录一次。
 
-    var match_cards=[];//用来存放匹配成功的卡片，长度为16时游戏结束。
+    var match_cards=[];     //用来存放匹配成功的卡片，长度为16时游戏结束。
 
-	var card = document.getElementsByClassName('card');//获取有图片的li元素节点，返回一个数组对象。
-    
-    /*给有图片的li元素节点绑定事件监听*/
-	for (var i = 0; i < card.length; i++) {  
-		(function(i){	
-		//card[i].addEventListener('click',handler,false);
-         /*让卡片在每一次比较中只能点击一次*/
+	var card = document.getElementsByClassName('card');        //获取有图片的li元素节点，返回一个数组对象。
+
+    var counter=0;      //记录步数，每翻开两次卡片算一步。
+
+	 /*for (var i = 0; i < card.length; i++) {        /*要想成功取消事件监听，handler函数必须前后一致，所以取消这种绑定方法。
+     
+		(function(i){*/	
+		
+         /*让卡片在每一次比较中只记录一次*/
          var  handler=function(){
-         id.push(i);
-         if(id[0]!=id[1]){
+            var i = this.dataset.id;
+            car_id.push(i);
             _testcards.push(card[i]);
             card[i].className="card show open";
-         }
-         else{
-            id.pop();
-         }
+            if(car_id[0]==car_id[1]){
+                car_id.splice(1,1);
+                 _testcards.splice(1,1);
+            }
          /*当点击两张不同的卡片后，在_testcards数组中将图片比较，相同则改变两张图片的样式，存入match_cards数组，并取消_testcards数组中Li的时件监听，
          同时将_testcards数组清零，好做下一次的比较。*/
-         while(_testcards.length==2)
+         else
          {
          	if(_testcards[0].getElementsByTagName("i")[0].className ==_testcards[1].getElementsByTagName("i")[0].className)
                 { 
+
                     for (var j = 0; j < _testcards.length; j++) 
                         {
-                            _testcards[j].className="card match";
+                            (function(j){
+                                 _testcards[j].className="card match";
                             match_cards.push(_testcards[j]);
-                            _testcards[j].removeEventListener('click',handler,false);//取消监听绑定
+                            _testcards[j].removeEventListener('click',handler,false);
+                            })(j)
+                          
                         } 
-
-                            id.length=0;
+                            _testcards.length=0;
+                            car_id.length=0;
          	    }
-                /*当两张卡片不同，就将卡片恢复原样，由于视觉效果，必须使用setTimeout来改变图片的样式，因为我设置有 _testcards的清零，
-                所有无法再使用_testcards数组中索引来改变图片，却刚好能将id数组中的索引用过来。比较后id数组清零。*/
-         	else{
-                    card[id[0]].className="card show error";
-                    card[id[1]].className="card show error";                  
+                /*当两张卡片不同，就将卡片恢复原样，由于视觉效果使用setTimeout来改变图片的样式*/
+         	else{ 
+                    _testcards[0].className="card show error";
+                    _testcards[1].className="card show error";                  
                     setTimeout(function(){
-                        card[id[0]].className="card ";
-                        card[id[1]].className="card ";
-                        id.length=0;
-                        },1000);
+                        _testcards[0].className="card ";
+                        _testcards[1].className="card ";
+                        _testcards.length=0;
+                        car_id.length=0;
+                        },300);
          	    }
-         	_testcards.length=0;
             /*当匹配成功的的卡片数组长度为16时游戏完成*/
             if(match_cards.length==16)
             {
                 setTimeout(function(){
-                   alert("恭喜你完成游戏！");
-                   for (var i = 0; i < card.length; i++) {
-                       card[i].className="card";
-                   }
-                   match_cards.length=0;
-                    },500);
+                   if(confirm("恭喜你完成游戏！是否重新开始?")){
+                   window.location.href="index.html";}            
+                    },100);
             }
          }	
 
 	    }
-          card[i].addEventListener('click',handler,false);
-	  })(i)
-	   
-	}
+         /*给有图片的li元素节点绑定事件监听*/
+        for (var i = 0; i < card.length; i++) { 
+            card[i].dataset['id'] = i;       //给handler函数传入参数i,既卡片索引。
+            card[i].addEventListener('click',handler,false);
+	 /* })(i)*/
+	   }
+	//}
 	
-}
 /***************重新开始***********************************/
 function reset(){    
     if(confirm("是否重新开始?")){
