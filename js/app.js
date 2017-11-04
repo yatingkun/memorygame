@@ -45,7 +45,7 @@ document.getElementsByClassName("deck")[0].innerHTML = str;
 		
          /*让卡片在每一次比较中只记录一次*/
          var  handler=function(){
-            var i = this.dataset.id;
+            var i = this.dataset.id;   //传入索引值i。
             car_id.push(i);
             _testcards.push(card[i]);
             card[i].className="card show open";
@@ -56,7 +56,8 @@ document.getElementsByClassName("deck")[0].innerHTML = str;
          /*当点击两张不同的卡片后，在_testcards数组中将图片比较，相同则改变两张图片的样式，存入match_cards数组，并取消_testcards数组中Li的时件监听，
          同时将_testcards数组清零，好做下一次的比较。*/
          else
-         {
+         {   
+
          	if(_testcards[0].getElementsByTagName("i")[0].className ==_testcards[1].getElementsByTagName("i")[0].className)
                 { 
 
@@ -85,12 +86,14 @@ document.getElementsByClassName("deck")[0].innerHTML = str;
          	    }
             /*当匹配成功的的卡片数组长度为16时游戏完成*/
             if(match_cards.length==16)
-            {
+            {     
                 setTimeout(function(){
                    if(confirm("恭喜你完成游戏！是否重新开始?")){
                    window.location.href="index.html";}            
                     },100);
             }
+            ++counter;
+            document.getElementById("steps").innerHTML=counter;
          }	
 
 	    }
@@ -101,7 +104,6 @@ document.getElementsByClassName("deck")[0].innerHTML = str;
 	 /* })(i)*/
 	   }
 	//}
-	
 /***************重新开始***********************************/
 function reset(){    
     if(confirm("是否重新开始?")){
