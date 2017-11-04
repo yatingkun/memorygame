@@ -28,7 +28,6 @@ for (var i = 0; i<cards_style.length;i++){
 }
 document.getElementsByClassName("deck")[0].innerHTML = str;
 /******************************游戏主要流程***********************************************/
- //window.onload=function(){
 	var _testcards=[];     //用来存放互相匹配的卡片，长度最多为2。
 
     var car_id=[];      //用来记录卡片的索引值，让卡片在每一次比较中只记录一次。
@@ -58,21 +57,20 @@ document.getElementsByClassName("deck")[0].innerHTML = str;
          else
          {   
 
-         	if(_testcards[0].getElementsByTagName("i")[0].className ==_testcards[1].getElementsByTagName("i")[0].className)
-                { 
-
-                    for (var j = 0; j < _testcards.length; j++) 
-                        {
+         	if(_testcards[0].getElementsByTagName("i")[0].className ==_testcards[1].getElementsByTagName("i")[0].className){
+                
+                    for (var j = 0; j < _testcards.length; j++) {
+            
                             (function(j){
-                                 _testcards[j].className="card match";
-                            match_cards.push(_testcards[j]);
-                            _testcards[j].removeEventListener('click',handler,false);
+                                _testcards[j].className="card match";
+                                match_cards.push(_testcards[j]);
+                                _testcards[j].removeEventListener('click',handler,false);
                             })(j)
                           
-                        } 
+                    }     
                             _testcards.length=0;
-                            car_id.length=0;
-         	    }
+                            car_id.length=0;                    
+         	}
                 /*当两张卡片不同，就将卡片恢复原样，由于视觉效果使用setTimeout来改变图片的样式*/
          	else{ 
                     _testcards[0].className="card show error";
@@ -85,12 +83,12 @@ document.getElementsByClassName("deck")[0].innerHTML = str;
                         },300);
          	    }
             /*当匹配成功的的卡片数组长度为16时游戏完成*/
-            if(match_cards.length==16)
-            {     
+            if(match_cards.length==16){
+                
                 setTimeout(function(){
-                   if(confirm("恭喜你完成游戏！是否重新开始?")){
-                   window.location.href="index.html";}            
-                    },100);
+                    reset("恭喜你完成游戏！是否重新开始?\n共用步数："+counter);
+                    match_cards.length=0;                
+                },100);
             }
             ++counter;
             document.getElementById("steps").innerHTML=counter;
@@ -102,11 +100,18 @@ document.getElementsByClassName("deck")[0].innerHTML = str;
             card[i].dataset['id'] = i;       //给handler函数传入参数i,既卡片索引。
             card[i].addEventListener('click',handler,false);
 	 /* })(i)*/
-	   }
+	    }
 	//}
 /***************重新开始***********************************/
-function reset(){    
-    if(confirm("是否重新开始?")){
-      window.location.href="index.html";            
+function reset(mesege){ 
+       
+    if(confirm(mesege)){
+        for (var i = 0; i < card.length; i++) {
+            card[i].className="card";
+            card[i].dataset['id'] = i;       //给handler函数传入参数i,既卡片索引。
+            card[i].addEventListener('click',handler,false);
+            document.getElementById("steps").innerHTML="0";
+            counter=0;
+        }          
     }
 }
