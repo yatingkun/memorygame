@@ -24,12 +24,16 @@ var cards_style = ['fa-diamond','fa-diamond',
 var str = '';
 var start='';       //重置时访问。
 var counter=0;      //记录步数，每翻开两次卡片算一步。
+var minute,second;      //时 分 秒    
+minute=second=0;        //初始化     
+var millisecond=0;      //毫秒     
+var int;     
 shuffle(cards_style);
 for (var i = 0; i<cards_style.length;i++){
     str += '<li class = \"card\"><i class=\"fa '+cards_style[i]+'\"></i></li>\n';
 }
 document.getElementsByClassName("deck")[0].innerHTML = str;
-if(counter==0){
+if(counter==0){     //初始化星级为3星。
     for (var i = 0; i < 3; i++) {
       start += '<li><i class=\"fa fa-star\"></i></li>\n';
  }
@@ -94,13 +98,13 @@ if(counter==0){
                         },100);
                         }
             ++counter;
-            document.getElementById("steps").innerHTML=counter;
+            document.getElementsByClassName("steps")[0].innerHTML=counter;
             setstatr(counter);
             if(counter>32){reset("很遗憾！游戏失败！请在32步以内完成！")}  //游戏需要在32步以内完成。
             }	
            
 	    }
-         /*给有图片的li元素节点绑定事件监听*/
+ /*给有图片的li元素节点绑定事件监听*/
 for (var i = 0; i < card.length; i++) { 
 
     card[i].dataset['id'] = i;       //给handler函数传入参数i,既卡片索引。
@@ -122,8 +126,7 @@ for (var i = 0; i < card.length; i++) {
     document.getElementsByClassName("stars")[0].innerHTML = start;
     document.getElementsByClassName("moves")[0].innerHTML = i;
      }
- }
- 
+ } 
 /***************重新开始***********************/
 function reset(mesege){ 
        
@@ -141,3 +144,30 @@ function reset(mesege){
     }
 }
 /***************计时器**********************/
+
+function Reset(){       //时间重置    
+
+            window.clearInterval(int); 
+            millisecond=hour=minute=second=0;   
+            document.getElementById('times').innerHTML='00分00秒';   
+        } 
+function start(){//开始 
+      alert("!!");           // int=setInterval(timer,5);    
+        }  
+function timer(){//计时 
+
+            millisecond=millisecond+5; 
+            if(millisecond>=1000){         
+                millisecond=0;         
+                second=second+1;      
+            }  
+            if(second>=60){ 
+                second=0;
+                minute=minute+1;       
+            }          
+            document.getElementById('times').innerHTML=minute+'分'+second+'秒'+millisecond+'毫秒';      
+        }    
+function stop(){//暂停    
+               
+          window.clearInterval(int);    
+        }  
