@@ -20,12 +20,12 @@
         	</ul>
         	<span class="moves"></span> Moves
             <span>步数:</span>
-            <span class="steps"></span>
-             <span>耗时:00分00秒</span> 
-             <span class="time"></span>
+            <span class="steps">0</span>
+             <span>耗时:</span> 
+             <span class="time">00分00秒</span>
             <div class="restart">
-        		<i class="fa fa-repeat" onclick="reset('是否重新开始?')">重新开始</i>
-                <i class="fa fa-paper-plane-o" onclick="start()">重新开始</i>
+        		<button class="fa fa-repeat" id="restart" onclick="reset('是否重新开始?')" disabled="disabled">重新开始</button>
+                <button class="fa fa-paper-plane-o" id="starting" onclick="started()">开始游戏</button>
         	</div>
         </section>
 

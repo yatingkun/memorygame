@@ -21,24 +21,32 @@ var cards_style = ['fa-diamond','fa-diamond',
 'fa-leaf','fa-leaf',
 'fa-bicycle','fa-bicycle',
 'fa-bomb','fa-bomb'];
-var str = '';
-var start='';       //重置时访问。
-var counter=0;      //记录步数，每翻开两次卡片算一步。
-var minute,second;      //时 分 秒    
-minute=second=0;        //初始化     
-var millisecond=0;      //毫秒     
-var int;     
-shuffle(cards_style);
-for (var i = 0; i<cards_style.length;i++){
-    str += '<li class = \"card\"><i class=\"fa '+cards_style[i]+'\"></i></li>\n';
+function setcards(){        //放置卡片
+    var str = '';
+    shuffle(cards_style);
+    for (var i = 0; i<cards_style.length;i++){
+        str += '<li class = \"card\"><i class=\"fa '+cards_style[i]+'\"></i></li>\n';
 }
-document.getElementsByClassName("deck")[0].innerHTML = str;
+    document.getElementsByClassName("deck")[0].innerHTML = str;   
+}
+window.onload=setcards;
+/*************初始化星星**********/
+                
+var counter=0;              //记录步数，每翻开两次卡片算一步。
+var minute,second;          //时 分 秒    
+minute=second=0;            //初始化           
+var int;                    //存放计时的时间
+function setstarts(n){      //设置星星
+     var start='';     
+     for (var i = 0; i < n; i++) {
+        start += '<li><i class=\"fa fa-star\"></i></li>\n';
+     }
+     document.getElementsByClassName("stars")[0].innerHTML = start;
+     document.getElementsByClassName("moves")[0].innerHTML = n;
+
+}
 if(counter==0){     //初始化星级为3星。
-    for (var i = 0; i < 3; i++) {
-      start += '<li><i class=\"fa fa-star\"></i></li>\n';
- }
- document.getElementsByClassName("stars")[0].innerHTML = start;
- document.getElementsByClassName("moves")[0].innerHTML = i;
+    setstarts(3);
  }
 /******************************游戏主要流程***********************************************/
 	var _testcards=[];     //用来存放互相匹配的卡片，长度最多为2。
@@ -87,39 +95,50 @@ if(counter==0){     //初始化星级为3星。
                             _testcards[1].className="card ";
                             _testcards.length=0;
                             car_id.length=0;
-                            },500);
+                            },400);
          	        }
             /*当匹配成功的的卡片数组长度为16时游戏完成*/
                     if(match_cards.length==16){
                 
                         setTimeout(function(){
-                        reset("恭喜你完成游戏！是否重新开始?\n共用步数："+counter);
+                        reset("恭喜你完成游戏！是否重新开始?\n共用步数："+counter+"\n耗时："+second+"秒\n"+"获得:"+ss+"星");
                         match_cards.length=0;                
-                        },100);
+                        },300);
                         }
             ++counter;
             document.getElementsByClassName("steps")[0].innerHTML=counter;
-            setstatr(counter);
-            if(counter>32){reset("很遗憾！游戏失败！请在32步以内完成！")}  //游戏需要在32步以内完成。
+            if(counter>=16){
+                setstarts(2);
+            }
+            if(counter>=24){
+                setstarts(1);
+            }
+            //setstatr(counter);
+            if(counter>32){
+                reset("很遗憾！游戏失败！请在32步以内完成！")
+            }  //游戏需要在32步以内完成。
+
             }	
            
 	    }
  /*给有图片的li元素节点绑定事件监听*/
-for (var i = 0; i < card.length; i++) { 
-
-    card[i].dataset['id'] = i;       //给handler函数传入参数i,既卡片索引。
-    card[i].addEventListener('click',handler,false);
+function bind(length){
+    for (var i = 0; i < length; i++) { 
+        card[i].dataset['id'] = i;       //给handler函数传入参数i,既卡片索引。
+        card[i].addEventListener('click',handler,false);
+    }
  }
-
- /**********设置星级,16到24以内完成获得二星，24到32步一星********************/
+ /**********35秒内以16步完成获得三星，35秒到55秒以16到24步完成获得二星，24到32步以内且在55秒内获得一星********************/
  function setstatr(n){
 
      if(n>=16){
-          var start='';
+          var start=''
           for (var i = 0; i < 2; i++) {
+          ss =2;
           start += '<li><i class=\"fa fa-star\"></i></li>\n';
           } 
         if(n>=24){
+             ss =1;
             var i=1;
             var start = '<li><i class=\"fa fa-star\"></i></li>\n';
         }
@@ -131,43 +150,40 @@ for (var i = 0; i < card.length; i++) {
 function reset(mesege){ 
        
     if(confirm(mesege)){
-        
+        counter=0;
+        minute=second=0;
+        setstarts(3);
+        document.getElementsByClassName("steps")[0].innerHTML="0";               
+        document.getElementsByClassName('time')[0].innerHTML='00分00秒';      
+        document.getElementById("restart").disabled=true  ;
+        document.getElementById("starting").disabled=false  ;
+        window.clearInterval(int);
+        setcards();
         for (var i = 0; i < card.length; i++) {
-            card[i].className="card";
-            card[i].dataset['id'] = i;       //给handler函数传入参数i,既卡片索引。
-            card[i].addEventListener('click',handler,false);
-            document.getElementById("steps").innerHTML="0";
-            counter=0;
-            document.getElementsByClassName("stars")[0].innerHTML = start;
-            document.getElementsByClassName("moves")[0].innerHTML = 3;
-        }          
+                 card[i].removeEventListener('click',handler,false)
+            }          
     }
 }
 /***************计时器**********************/
-
-function Reset(){       //时间重置    
-
-            window.clearInterval(int); 
-            millisecond=hour=minute=second=0;   
-            document.getElementById('times').innerHTML='00分00秒';   
-        } 
-function start(){//开始 
-      alert("!!");           // int=setInterval(timer,5);    
+function started(){     //开始 
+        bind(card.length);
+         int=setInterval(timer,1000);  
+         document.getElementById("restart").disabled=false  ;
+         document.getElementById("starting").disabled=true  ;
         }  
-function timer(){//计时 
-
-            millisecond=millisecond+5; 
-            if(millisecond>=1000){         
-                millisecond=0;         
-                second=second+1;      
-            }  
+function timer(){   //计时 
+            second=second+1; 
             if(second>=60){ 
                 second=0;
                 minute=minute+1;       
             }          
-            document.getElementById('times').innerHTML=minute+'分'+second+'秒'+millisecond+'毫秒';      
+            document.getElementsByClassName('time')[0].innerHTML=minute+'分'+second+'秒'; 
+            if(second>=30){
+                  ss =2;
+                 setstatr(16);
+            } 
+             if(second>=55){
+                 ss =1;
+                 setstatr(24);
+            }         
         }    
-function stop(){//暂停    
-               
-          window.clearInterval(int);    
-        }  
