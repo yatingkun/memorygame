@@ -59,18 +59,18 @@ var handler = function() {
     var i = this.dataset.id; //传入索引值i。
     car_id.push(i);
     _testcards.push(card[i]);
-    card[i].className = "card show open";
+    card[i].className= "card show open animated wobble ";
     if (car_id[0] == car_id[1]) { //让卡片在每次比较中只能点击一次。
         car_id.splice(1, 1);
         _testcards.splice(1, 1);
     }
     /*当点击两张不同的卡片后，在_testcards数组中将图片比较，相同则改变两张图片的样式，存入match_cards数组，并取消_testcards数组中Li的时件监听，
     同时将_testcards数组清零，好做下一次的比较。*/
-    else {
+    else if (_testcards.length >= 2) {
         if (_testcards[0].getElementsByTagName("i")[0].className == _testcards[1].getElementsByTagName("i")[0].className) {
             for (var j = 0; j < _testcards.length; j++) {
                 (function(j) {
-                    _testcards[j].className = "card match";
+                    _testcards[j].className = "card match animated wobble";
                     match_cards.push(_testcards[j]);
                     _testcards[j].removeEventListener('click', handler, false);
                 })(j)
@@ -80,8 +80,8 @@ var handler = function() {
         }
         /*当两张卡片不同，就将卡片恢复原样，由于视觉效果使用setTimeout来改变图片的样式*/
         else {
-            _testcards[0].className = "card show error";
-            _testcards[1].className = "card show error";
+            _testcards[0].className = "card show error animated wobble";
+            _testcards[1].className = "card show error animated wobble";
             setTimeout(function() {
                 _testcards[0].className = "card ";
                 _testcards[1].className = "card ";
@@ -94,7 +94,7 @@ var handler = function() {
             setTimeout(function() {
                 reset("恭喜你完成游戏！是否重新开始?\n共用步数：" + counter + "\n耗时：" + second + "秒\n" + "获得:" + ss + "星");
                 match_cards.length = 0;
-            }, 300);
+            }, 500);
         }
         ++counter;
         document.getElementsByClassName("steps")[0].innerHTML = counter;
